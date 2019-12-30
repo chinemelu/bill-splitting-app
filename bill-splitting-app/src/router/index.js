@@ -7,7 +7,12 @@ const routes = [
   {
     path: '/',
     name: 'signup-form',
-    component: () => import('@/pages/signup/Index.vue'),
+    component: () => import('@/pages/home/Index.vue'),
+  },
+  {
+    path: '/signin',
+    name: 'signin-form',
+    component: () => import('@/pages/home/Index.vue'),
   },
 ];
 
