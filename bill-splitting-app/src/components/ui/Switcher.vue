@@ -26,11 +26,11 @@ export default {
 </script>
 
 <style scoped>
-.signup-form-switcher ul li a  {
+.signup-form-switcher ul li a, .signin-form-switcher ul li a  {
   text-decoration: none;
   color: #ccc;
 }
-.signup-form-switcher > ul {
+.signup-form-switcher > ul,.signin-form-switcher > ul {
   list-style: none;
   width: 50%;
   padding: 0;
@@ -39,14 +39,24 @@ export default {
   top: 20px;
 }
 
-.signup-form-switcher ul li {
+.signin-form-switcher > ul {
+  right: 0;
+  list-style: none;
+  width: 50%;
+  padding: 0;
+  margin-top: 0px;
+  position: absolute;
+  top: 20px;
+}
+
+.signup-form-switcher ul li, .signin-form-switcher ul li {
   display: inline-block;
   width: 50%;
   text-align: center;
   position: relative
 }
 
-.signup-form-switcher ul li a::after {
+.signup-form-switcher ul li a::after, .signin-form-switcher ul li a::after  {
   content: '';
   display: block;
   height: 4px;
@@ -55,11 +65,13 @@ export default {
   top: 30px;
 }
 
-.signup-form-switcher .anchor-first-toggle::after {
+.signup-form-switcher .anchor-first-toggle::after,
+.signin-form-switcher .anchor-first-toggle::after {
   background-color: rgba(30, 139, 195, 0.9);
 }
 
-.signup-form-switcher .anchor-second-toggle::after {
+.signup-form-switcher .anchor-second-toggle::after,
+.signin-form-switcher .anchor-second-toggle::after {
   background-color: #d2d8d8;
 }
 
