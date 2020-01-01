@@ -14,6 +14,21 @@ const routes = [
     name: 'signin-form',
     component: () => import('@/pages/home/Index.vue'),
   },
+  {
+    path: '/sidebar',
+    name: 'sidebar',
+    component: () => import('@/components/layout/Sidebar.vue'),
+  },
+  {
+    path: '/navbar',
+    name: 'navbar',
+    component: () => import('@/components/layout/defaultLayout.vue'),
+  },
+  {
+    path: '/list',
+    name: 'list',
+    component: () => import('@/pages/bills/ListBills.vue'),
+  },
 ];
 
 const router = new VueRouter({
