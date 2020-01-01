@@ -97,7 +97,7 @@ export default {
 }
 .welcome-message-body {
   position: absolute;
-  top: 5px;
+  top: 20px;
   left: 25%;
   transform: translateX(-50%);
   width: 45%;

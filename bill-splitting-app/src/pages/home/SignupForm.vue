@@ -104,7 +104,7 @@ export default {
 }
 .welcome-message-body {
   position: absolute;
-  top: 5px;
+  top: 20px;
   right: 25%;
   transform: translateX(50%);
   width: 45%;
@@ -112,7 +112,7 @@ export default {
 .welcome-message-primary {
   display: block;
   margin-bottom: 20px;
-  font-size: 40px;
+  font-size: 35px;
   text-transform: uppercase;
   letter-spacing: 5px;
 }
