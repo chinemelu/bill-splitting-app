@@ -1,14 +1,13 @@
 <template>
-  <div>
-    <div :class="inputClass + '-container'">
-      <input
-        :type="type"
-        :class="inputClass + '-input-field'"
-        :placeholder="placeholder"
-        :required="required"
-      />
-      <label :class="inputClass + '-label'">{{label}}</label>
-    </div>
+  <div :class="inputClass + '-container'">
+    <label :class="inputClass + '-label'" v-if="topLabel">{{topLabel}}</label>
+    <input
+      :type="type"
+      :class="inputClass + '-input-field'"
+      :placeholder="placeholder"
+      :required="required"
+    />
+    <label v-if="label" :class="inputClass + '-label'">{{label}}</label>
   </div>
 </template>
 
@@ -30,6 +29,9 @@ export default {
     },
     required: {
       type: Boolean,
+    },
+    topLabel: {
+      type: String,
     },
   },
 };
@@ -64,9 +66,11 @@ export default {
 .signup-form-input-field:placeholder-shown.signup-form-input-field:invalid {
   border-bottom: 1px solid#ccc;
 }
+label {
+  display: block
+}
 .signup-form-label {
   margin: 0 auto;
-  display: block;
   width: 80%;
   font-size: 14px;
   transition: all .1s;
@@ -85,5 +89,30 @@ export default {
 .signup-form-input-field.signup-form-input-field:invalid{
   border-bottom: 3px solid red;
 }
+.create-bill-title-input-field{
+  padding: 7px 0;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+}
+.create-bill-title-container {
+  margin-bottom: 35px;
+}
+.create-bill-recipient-amount-input-field, .create-bill-recipient-email-input-field {
+  padding: 7px 0;
+  font-size: 14px;
+  outline: none;
+  width: 100%
+}
+/* .create-bill-recipient-amount-container, .create-bill-recipient-email-container {
+  display: inline-block;
+}
 
+.create-bill-recipient-amount-container {
+  width: 40%;
+  margin-left: 15px;
+}
+.create-bill-recipient-email-container {
+  width: 58%;
+} */
 </style>

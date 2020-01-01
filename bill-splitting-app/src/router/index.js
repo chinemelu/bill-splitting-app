@@ -29,6 +29,11 @@ const routes = [
     name: 'list',
     component: () => import('@/pages/bills/ListBills.vue'),
   },
+  {
+    path: '/create',
+    name: 'create-bill',
+    component: () => import('@/pages/bills/CreateBills.vue'),
+  },
 ];
 
 const router = new VueRouter({

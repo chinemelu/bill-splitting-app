@@ -1,5 +1,5 @@
 <template>
-  <div class="overall">
+  <default-layout>
     <table class="list-bills-table">
       <tr>
         <th>Date</th>
@@ -16,13 +16,16 @@
         <td><button class="list-bills-btn">View details</button></td>
       </tr>
     </table>
-  </div>
+  </default-layout>
 </template>
 
 <script>
-
+import defaultLayout from '@/components/layout/defaultLayout.vue';
 
 export default {
+  components: {
+    'default-layout': defaultLayout,
+  },
 };
 </script>
 
@@ -30,8 +33,8 @@ export default {
 <style scoped>
 .list-bills-table {
   box-shadow: 0 1.5rem 4rem rgba(204, 204, 204, 0.5);
-  width: 70%;
-  margin: 120px auto;
+  width: 90%;
+  margin: 150px auto;
   border-collapse: collapse;
   border-radius: 5px;
   text-align: center;
