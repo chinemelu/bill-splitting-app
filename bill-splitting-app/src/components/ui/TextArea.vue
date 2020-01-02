@@ -10,11 +10,19 @@
     >
     </textarea>
     <label v-if="label" :class="inputClass + '-label'">{{label}}</label>
+    <error-message
+    :ErrorMessage="ErrorMessage"
+    ></error-message>
   </div>
 </template>
 
 <script>
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
+
 export default {
+  components: {
+    'error-message': ErrorMessage,
+  },
   props: {
     type: {
       type: String,
@@ -33,6 +41,9 @@ export default {
       type: Boolean,
     },
     topLabel: {
+      type: String,
+    },
+    ErrorMessage: {
       type: String,
     },
   },

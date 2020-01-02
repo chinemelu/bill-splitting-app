@@ -5,7 +5,7 @@
         <th>Date</th>
         <th>Title</th>
         <th>Description</th>
-        <th>Number of bill recipients</th>
+        <th>No of Recipients</th>
         <th>Action</th>
       </tr>
       <tr>
@@ -34,7 +34,7 @@ export default {
 .list-bills-table {
   box-shadow: 0 1.5rem 4rem rgba(204, 204, 204, 0.5);
   width: 90%;
-  margin: 150px auto;
+  margin: 130px auto;
   border-collapse: collapse;
   border-radius: 5px;
   text-align: center;

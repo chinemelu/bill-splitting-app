@@ -5,14 +5,24 @@
       :type="type"
       :class="inputClass + '-input-field'"
       :placeholder="placeholder"
-      :required="required"
+      @input="$emit('input', $event.target.value)"
+      :value='value'
     />
     <label v-if="label" :class="inputClass + '-label'">{{label}}</label>
+    <error-message
+      :ErrorMessage="ErrorMessage"
+      :showError="showError"
+    ></error-message>
   </div>
 </template>
 
 <script>
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
+
 export default {
+  components: {
+    'error-message': ErrorMessage,
+  },
   props: {
     type: {
       type: String,
@@ -27,10 +37,16 @@ export default {
     placeholder: {
       type: String,
     },
-    required: {
+    topLabel: {
+      type: String,
+    },
+    showError: {
       type: Boolean,
     },
-    topLabel: {
+    value: {
+      type: String,
+    },
+    ErrorMessage: {
       type: String,
     },
   },
