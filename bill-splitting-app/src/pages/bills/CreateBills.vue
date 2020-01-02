@@ -112,7 +112,7 @@ export default {
   },
   watch: {
     bills() {
-      console.log('section changed');
+      this.$router.push({ path: '/list' });
     },
   },
   methods: {

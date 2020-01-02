@@ -7,8 +7,10 @@ export default {
   state: {
     isCreateBillsPageLoading: false,
     hasCreateBillsPageErrored: false,
+    isListBillsPageLoading: false,
     hasSigninErrored: false,
     bills: {},
+    listedBills: [],
   },
   mutations: {
     /**
@@ -44,6 +46,9 @@ export default {
     BILL_CREATION_SUCCESS(state, payload) {
       state.bills = payload;
     },
+    BILL_LISTING_SUCCESS(state, payload) {
+      state.listedBills = payload;
+    },
   },
   actions: {
     /**
@@ -60,32 +65,22 @@ export default {
         const billCreationResponse = await AxiosCalls.post(`${rootState.baseUrl}/create`, payload);
         commit('HAS_BILL_CREATION_PAGE_ERRORED', false);
         commit('IS_CREATE_BILLS_PAGE_LOADING', false);
-        commit('BILL_CREATION_SUCCESS', billCreationResponse.data.message.bill);
+        commit('BILL_CREATION_SUCCESS', billCreationResponse.data.message);
       } catch (error) {
         commit('HAS_BILL_CREATION_PAGE_ERRORED', false);
         commit('IS_CREATE_BILLS_PAGE_LOADING', false);
       }
     },
-    handleSignin: async ({ commit, rootState }, payload) => {
-      commit('IS_SIGNIN_PAGE_LOADING', true);
-      commit('HAS_SIGNIN_ERRORED', false);
-      commit('USER_SIGNIN_ERROR', '');
+    handleBillListing: async ({ commit, rootState }, payload) => {
+      commit('IS_LIST_BILLS_PAGE_LOADING', true);
       try {
-        const signinResponse = await AxiosCalls.post(`${rootState.baseUrl}/login`, payload);
-        commit('USER_SIGNIN_ERROR', '');
-        commit('HAS_SIGNIN_ERRORED', false);
-        commit('IS_SIGNIN_PAGE_LOADING', false);
-        commit('USER_SIGNIN_SUCCESS', signinResponse.data.message.user);
+        console.log('payload', payload);
+        const billListingResponse = await AxiosCalls
+          .get(`${rootState.baseUrl}/list?user_account_id=${payload}`);
+        commit('IS_LIST_BILLS_PAGE_LOADING', false);
+        commit('BILL_LISTING_SUCCESS', billListingResponse.data.message);
       } catch (error) {
-        if (error.message.email) {
-          commit('USER_SIGNIN_ERROR', error.message.email[0]);
-        } else if (error.message.password) {
-          commit('USER_SIGNIN_ERROR', error.message.password[0]);
-        } else {
-          commit('USER_SIGNIN_ERROR', '');
-        }
-        commit('HAS_SIGNIN_ERRORED', true);
-        commit('IS_SIGNIN_PAGE_LOADING', false);
+        commit('IS_LIST_BILLS_PAGE_LOADING', false);
       }
     },
   },
