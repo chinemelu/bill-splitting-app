@@ -24,7 +24,7 @@ export default {
 .error-message-container.visible {
   visibility: visible;
 }
-.signup-form .error-message-container {
+.signup-form .error-message-container, .signin-form .error-message-container {
   width: 80%;
   margin: 0 auto;
 }

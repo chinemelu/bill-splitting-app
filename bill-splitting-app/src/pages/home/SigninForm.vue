@@ -12,10 +12,19 @@
         >
         </switcher>
         <div class="form-input-group">
+          <error-message
+            :ErrorMessage="serverErrorMessage || networkErrorMessage"
+            :showError="serverErrorMessage!=='' || networkErrorMessage !== ''"
+          >
+
+          </error-message>
           <FlashMessage position='right top'></FlashMessage>
           <input-field
           inputClass="signup-form"
           placeholder="Email"
+          v-model="email"
+          :ErrorMessage="errors.email"
+          :showError="errors.email !== ''"
           type="email"
           :required=" true"
           label="Email"
@@ -24,18 +33,25 @@
           <input-field
           inputClass="signup-form"
           placeholder="Password"
+          v-model="password"
           type="password"
           :required="true"
           label="Password"
+          :ErrorMessage="errors.password"
+          :showError="errors.password !== ''"
           >
           </input-field>
           <app-button
           buttonText="Login"
           @click="handleSignin"
           buttonClass="signup-form"
+          :disabled="isSigninPageLoading"
           >
 
           </app-button>
+          <spinner
+            v-if="isSigninPageLoading"
+          ></spinner>
         </div>
         <div class="welcome-message-container">
           <h1 class="welcome-message-body">
@@ -48,15 +64,40 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import AppButton from '@/components/ui/AppButton.vue';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 import InputField from '@/components/ui/InputField.vue';
 import Switcher from '@/components/ui/Switcher.vue';
+import Spinner from '@/components/ui/Spinner.vue';
+import ValidateInput from '@/helper/ValidateInput';
 
 export default {
   components: {
     'app-button': AppButton,
     'input-field': InputField,
     switcher: Switcher,
+    Spinner,
+    'error-message': ErrorMessage,
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+      errors: {
+        email: '',
+        password: '',
+      },
+    };
+  },
+  computed: {
+    ...mapState({
+      isSigninPageLoading: state => state.auth.isSigninPageLoading,
+      serverErrorMessage: state => state.auth.signinError,
+      networkErrorMessage: state => state.auth.networkSigninError,
+      hasSigninErrored: state => state.auth.hasSigninErrored,
+      authUser: state => state.auth.authUser,
+    }),
   },
   mounted() {
     if (this.$route.query.registration === 'success') {
@@ -67,8 +108,33 @@ export default {
     }
   },
   methods: {
-    handleSignup() {
-      console.log('signed up');
+    ...mapActions({
+      signinUser: 'handleSignin',
+    }),
+    validateInput() {
+      const validateInput = new ValidateInput(this.errors);
+      validateInput.emptyInput(this.email, 'email', 'Please enter email');
+      validateInput.emptyInput(this.password, 'password', 'Please enter password');
+      validateInput.invalidEmail(this.email);
+    },
+    isThereValidationError() {
+      let result;
+      Object.keys(this.errors).forEach((key) => {
+        if (this.errors[key] !== '') {
+          result = true;
+        }
+      });
+      return result;
+    },
+    handleSignin() {
+      this.validateInput();
+      const isThereSigninValidationError = this.isThereValidationError();
+      if (!isThereSigninValidationError) {
+        this.signinUser({
+          email: this.email,
+          password: this.password,
+        });
+      }
     },
   },
 };
