@@ -4,17 +4,21 @@
       <div class="create-bills-heading">
         <p>Create Bill Split</p>
       </div>
-      <form action="POST" class="form-input-group">
+      <div class="form-input-group">
         <input-field
         inputClass="create-bill-title"
-        :required=" true"
         topLabel="Title"
+        v-model="title"
+        :ErrorMessage="errors.title"
+        :showError="errors.title !== ''"
         >
         </input-field>
         <text-area
         inputClass="create-bill-description"
-        :required="true"
+        v-model="description"
         topLabel="Description"
+        :ErrorMessage="errors.description"
+        :showError="errors.description !== ''"
         >
         </text-area>
 
@@ -24,16 +28,20 @@
         <div class="recipients-inputs-container" v-for="(input, index) in inputs" :key="index">
           <input-field
           inputClass="create-bill-recipient-email"
-          :required="true"
           topLabel="Email"
+          v-model="input.email"
+          :ErrorMessage="input.errors.email"
+          :showError="input.errors.email !== ''"
           >
           </input-field>
 
           <input-field
           inputClass="create-bill-recipient-amount"
           type="number"
-          :required="true"
           topLabel="Amount"
+          v-model="input.amount"
+          :ErrorMessage="input.errors.amount"
+          :showError="input.errors.amount !== ''"
           >
           </input-field>
         </div>
@@ -46,20 +54,29 @@
 
         <app-button
         buttonText="Invite"
-        @click="handleSignin"
+        @click="handleBillCreation"
         buttonClass="create-bill-invite"
+        :disabled="isCreateBillsPageLoading"
         >
         </app-button>
-      </form>
+        <spinner
+        v-if="isCreateBillsPageLoading"
+        >
+        </spinner>
+      </div>
     </div>
  </default-layout>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import AppButton from '@/components/ui/AppButton.vue';
 import TextArea from '@/components/ui/TextArea.vue';
 import InputField from '@/components/ui/InputField.vue';
 import defaultLayout from '@/components/layout/defaultLayout.vue';
+import ValidateInput from '@/helper/ValidateInput';
+import ValidateMultipleInputs from '@/helper/ValidateMultipleInputs';
+import Spinner from '@/components/ui/Spinner.vue';
 
 export default {
   components: {
@@ -67,21 +84,91 @@ export default {
     'input-field': InputField,
     'text-area': TextArea,
     'default-layout': defaultLayout,
+    Spinner,
   },
   data() {
     return {
       inputs: [{
-        one: '',
-        two: '',
+        email: '',
+        amount: '',
+        errors: {
+          email: '',
+          amount: '',
+        },
       }],
+      title: '',
+      description: '',
+      errors: {
+        description: '',
+        title: '',
+      },
     };
   },
+  computed: {
+    ...mapState({
+      isCreateBillsPageLoading: state => state.bills.isCreateBillsPageLoading,
+      bills: state => state.bills.bills,
+    }),
+  },
+  watch: {
+    bills() {
+      console.log('section changed');
+    },
+  },
   methods: {
+    ...mapActions({
+      createBill: 'handleBillCreation',
+    }),
     addMoreRecipients() {
       this.inputs.push({
-        one: '',
-        two: '',
+        email: '',
+        amount: '',
+        errors: {
+          email: '',
+          amount: '',
+        },
       });
+    },
+    validateInput() {
+      const validateInput = new ValidateInput(this.errors);
+      validateInput.emptyInput(this.description, 'description', 'Please enter description');
+      validateInput.emptyInput(this.title, 'title', 'Please enter title');
+      this.inputs.forEach((input) => {
+        const validateMultipleInputs = new ValidateMultipleInputs(input);
+        validateMultipleInputs
+          .validateMultipleEmptyInputs(input.email, 'email', 'Please enter email');
+        validateMultipleInputs.validateMultipleEmails(input.email);
+        validateMultipleInputs
+          .validateMultipleEmptyInputs(input.amount, 'amount', 'Please enter amount');
+        validateMultipleInputs
+          .validateMultipleAmounts(input.amount);
+      });
+    },
+    isThereValidationError() {
+      let result;
+      Object.keys(this.errors).forEach((key) => {
+        if (this.errors[key] !== '') {
+          result = true;
+        }
+      });
+      return result;
+    },
+    handleBillCreation() {
+      this.validateInput();
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userAccountID = user.user_account_id;
+      const isThereSigninValidationError = this.isThereValidationError();
+      if (!isThereSigninValidationError) {
+        this.createBill({
+          user_account_id: userAccountID,
+          title: this.title,
+          description: this.description,
+          recipients: this.inputs.map(input => ({
+            email: input.email,
+            amount: input.amount,
+          })),
+        });
+      }
     },
   },
 };

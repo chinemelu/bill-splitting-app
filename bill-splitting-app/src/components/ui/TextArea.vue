@@ -6,12 +6,15 @@
       :class="inputClass + '-text-area-field'"
       :placeholder="placeholder"
       :required="required"
+      @input="$emit('input', $event.target.value)"
+      :value='value'
       rows="7"
     >
     </textarea>
     <label v-if="label" :class="inputClass + '-label'">{{label}}</label>
     <error-message
     :ErrorMessage="ErrorMessage"
+    :showError="showError"
     ></error-message>
   </div>
 </template>
@@ -44,6 +47,12 @@ export default {
       type: String,
     },
     ErrorMessage: {
+      type: String,
+    },
+    showError: {
+      type: Boolean,
+    },
+    value: {
       type: String,
     },
   },

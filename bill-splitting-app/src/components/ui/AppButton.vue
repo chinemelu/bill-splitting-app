@@ -59,6 +59,7 @@ button {
 }
 button:disabled {
   background-color: #ccc;
+  border: 1px solid #ccc;
   pointer-events: none;
 }
 

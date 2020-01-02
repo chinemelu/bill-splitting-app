@@ -137,6 +137,12 @@ export default {
       }
     },
   },
+  watch: {
+    authUser() {
+      localStorage.setItem('user', JSON.stringify(this.authUser));
+      this.$router.push({ path: '/create' });
+    },
+  },
 };
 </script>
 

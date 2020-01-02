@@ -12,6 +12,7 @@
     <error-message
       :ErrorMessage="ErrorMessage"
       :showError="showError"
+      v-show="showError"
     ></error-message>
   </div>
 </template>
