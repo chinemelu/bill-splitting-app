@@ -1,6 +1,6 @@
 <template>
   <div :class="[showError ? 'visible' : '', 'error-message-container']">
-    <p>{{ErrorMessage}}</p>
+    <p class="error-message">{{ErrorMessage}}</p>
   </div>
 </template>
 

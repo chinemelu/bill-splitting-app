@@ -1,8 +1,11 @@
 <template>
   <div>
     <div class="sidenav">
-      <router-link to="#"><font-awesome-icon icon="plus-circle"/>Create</router-link>
-      <router-link to="#"><font-awesome-icon icon="list"/>List</router-link>
+      <router-link to="/create"><font-awesome-icon icon="plus-circle"
+      @click="$emit('sidebarClicked')"
+      />Create</router-link>
+      <router-link to="/list"><font-awesome-icon icon="list"
+      @click="$emit('sidebarClicked')"/>List</router-link>
     </div>
     <div class="main">
       <slot></slot>

@@ -1,6 +1,8 @@
 <template>
   <div>
-   <side-bar>
+   <side-bar
+   @sidebarClicked="handleSidebarClick"
+   >
     <slot></slot>
    </side-bar>
    <nav-bar></nav-bar>
@@ -18,6 +20,11 @@ export default {
     'nav-bar': Navbar,
     'side-bar': Sidebar,
     Footer,
+  },
+  methods: {
+    handleSidebarClick(value) {
+      this.$emit('sidebarClicked', value);
+    },
   },
 };
 </script>
