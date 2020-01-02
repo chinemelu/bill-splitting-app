@@ -6,9 +6,13 @@
         switcherClass="signin-form"
         leftSideLabel="Sign up"
         rightSideLabel="Sign in"
+        sideSelected="right"
+        @leftSwitcherClicked="$emit('sectionSelected', 'sign-up-form')"
+        @rightSwitcherClicked="$emit('sectionSelected', 'sign-in-form')"
         >
         </switcher>
-        <form action="POST" class="form-input-group">
+        <div class="form-input-group">
+          <FlashMessage position='right top'></FlashMessage>
           <input-field
           inputClass="signup-form"
           placeholder="Email"
@@ -32,7 +36,7 @@
           >
 
           </app-button>
-        </form>
+        </div>
         <div class="welcome-message-container">
           <h1 class="welcome-message-body">
             <span class="welcome-message-primary">Welcome Back!!!</span>
@@ -53,6 +57,14 @@ export default {
     'app-button': AppButton,
     'input-field': InputField,
     switcher: Switcher,
+  },
+  mounted() {
+    if (this.$route.query.registration === 'success') {
+      this.flashMessage.success({
+        title: 'Successful registration',
+        message: 'You can now proceed to login',
+      });
+    }
   },
   methods: {
     handleSignup() {

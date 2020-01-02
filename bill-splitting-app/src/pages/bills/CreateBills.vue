@@ -91,7 +91,7 @@ export default {
 <style scoped>
 .create-bills-section {
   max-width: 900px;
-  margin: 150px auto;
+  margin: 110px auto;
   padding: 20px;
   font-weight: 100;
 }

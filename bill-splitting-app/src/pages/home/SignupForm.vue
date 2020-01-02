@@ -6,40 +6,68 @@
         switcherClass="signup-form"
         leftSideLabel="Sign up"
         rightSideLabel="Sign in"
+        sideSelected="left"
+        @leftSwitcherClicked="$emit('sectionSelected', 'sign-up-form')"
+        @rightSwitcherClicked="$emit('sectionSelected', 'sign-in-form')"
         >
         </switcher>
-        <form action="POST" class="form-input-group">
+        <div class="form-input-group">
+          <error-message
+          :ErrorMessage="serverErrorMessage || networkErrorMessage"
+          :showError="serverErrorMessage!=='' || networkErrorMessage !== ''"
+          >
+
+          </error-message>
           <input-field
           inputClass="signup-form"
           placeholder="Username"
-          :required="true"
+          v-model="username"
           label="Username"
+          :ErrorMessage="errors.username"
+          :showError="errors.username !== ''"
           >
           </input-field>
           <input-field
           inputClass="signup-form"
           placeholder="Email"
+          v-model="email"
           type="email"
-          :required=" true"
           label="Email"
+          :ErrorMessage="errors.email"
+          :showError="errors.email !==''"
           >
           </input-field>
           <input-field
           inputClass="signup-form"
           placeholder="Password"
+          v-model="password"
           type="password"
-          :required="true"
           label="Password"
+          :ErrorMessage="errors.password"
+          :showError="errors.password !== ''"
+          >
+          </input-field>
+          <input-field
+          inputClass="signup-form"
+          placeholder="Confirm Password"
+          v-model="confirmPassword"
+          type="password"
+          label="Confirm Password"
+          :ErrorMessage="errors.confirmPassword"
+          :showError="errors.confirmPassword !== ''"
           >
           </input-field>
           <app-button
           buttonText="Sign Up"
           @click="handleSignup"
           buttonClass="signup-form"
+          :disabled="isSignupPageLoading"
           >
-
           </app-button>
-        </form>
+          <spinner
+          v-if="isSignupPageLoading"
+          ></spinner>
+        </div>
         <div class="welcome-message-container">
           <h1 class="welcome-message-body">
             <span class="welcome-message-primary">Welcome to Bill Splita</span>
@@ -52,19 +80,83 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 import InputField from '@/components/ui/InputField.vue';
 import Switcher from '@/components/ui/Switcher.vue';
+import ValidateInput from '@/helper/ValidateInput';
+import Spinner from '@/components/ui/Spinner.vue';
 
 export default {
   components: {
     'app-button': AppButton,
     'input-field': InputField,
     switcher: Switcher,
+    Spinner,
+    'error-message': ErrorMessage,
+  },
+  computed: {
+    ...mapState({
+      isSignupPageLoading: state => state.auth.isSignupPageLoading,
+      serverErrorMessage: state => state.auth.signupError,
+      networkErrorMessage: state => state.auth.networkError,
+      hasErrored: state => state.auth.hasErrored,
+      user: state => state.auth.user,
+    }),
+  },
+  data() {
+    return {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      errors: {
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      },
+    };
   },
   methods: {
+    ...mapActions({
+      signupUser: 'handleSignup',
+    }),
+    validateInput() {
+      const validateInput = new ValidateInput(this.errors);
+      validateInput.emptyInput(this.username, 'username', 'Please enter username');
+      validateInput.emptyInput(this.email, 'email', 'Please enter email');
+      validateInput.emptyInput(this.password, 'password', 'Please enter password');
+      validateInput.emptyInput(this.confirmPassword, 'confirmPassword', 'Please confirm your password');
+      validateInput.invalidEmail(this.email);
+      validateInput.confirmPassword(this.password, this.confirmPassword);
+    },
+    isThereValidationError() {
+      let result;
+      Object.keys(this.errors).forEach((key) => {
+        if (this.errors[key] !== '') {
+          result = true;
+        }
+      });
+      return result;
+    },
     handleSignup() {
-      console.log('signed up');
+      this.validateInput();
+      const isThereSignupValidationError = this.isThereValidationError();
+      if (!isThereSignupValidationError) {
+        this.signupUser({
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        });
+      }
+    },
+  },
+  watch: {
+    user() {
+      this.$router.push({ path: '/', query: { registration: 'success' } });
+      this.$emit('sectionSelected', 'sign-in-form');
     },
   },
 };

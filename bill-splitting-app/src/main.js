@@ -2,9 +2,12 @@ import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlusCircle, faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import FlashMessage from '@smartweb/vue-flash-message';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+
+Vue.use(FlashMessage);
 
 library.add(faPlusCircle, faList);
 

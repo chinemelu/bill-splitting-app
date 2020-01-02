@@ -3,6 +3,7 @@
     <button
       @click="$emit('click')"
       :class="buttonClass+'-btn'"
+      :disabled="disabled"
     >
       {{buttonText}}
     </button>
@@ -17,6 +18,9 @@ export default {
     },
     buttonClass: {
       type: String,
+    },
+    disabled: {
+      type: Boolean,
     },
   },
 };
@@ -47,8 +51,15 @@ export default {
   cursor: pointer;
   outline: none;
   display: block;
-  margin: 60px auto;
+  margin: 10px auto;
   font-size: 14px;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  background-color: #ccc;
+  pointer-events: none;
 }
 
 </style>

@@ -2,8 +2,20 @@
   <div>
    <div :class="switcherClass + '-switcher'">
       <ul>
-        <li><a class="anchor-first-toggle" href="#">{{leftSideLabel}}</a></li>
-        <li><a class="anchor-second-toggele" href="#">{{rightSideLabel}}</a></li>
+        <li
+        @click="handleSelected({
+          emit: 'leftSwitcherClicked', selected: 'left'
+        })"
+        ><router-link
+        :class="[selected === 'left' ? 'selected' : 'un-selected', 'anchor-first-toggle']"
+         to="#">{{leftSideLabel}}</router-link></li>
+        <li
+        @click="handleSelected({
+          emit: 'rightSwitcherClicked', selected: 'right'
+        })"
+        ><router-link
+        :class="[selected === 'right' ? 'selected' : 'un-selected', 'anchor-second-toggle']"
+        to="#">{{rightSideLabel}}</router-link></li>
       </ul>
     </div>
   </div>
@@ -21,6 +33,20 @@ export default {
     switcherClass: {
       type: String,
     },
+    sideSelected: {
+      type: String,
+    },
+  },
+  data() {
+    return {
+      selected: this.sideSelected,
+    };
+  },
+  methods: {
+    handleSelected(value) {
+      this.$emit(value.emit);
+      this.selected = value.selected;
+    },
   },
 };
 </script>
@@ -33,7 +59,6 @@ export default {
 .signup-form-switcher > ul,.signin-form-switcher > ul {
   list-style: none;
   width: 50%;
-  padding: 0;
   margin-top: 0px;
   position: absolute;
   top: 20px;
@@ -53,7 +78,7 @@ export default {
   display: inline-block;
   width: 50%;
   text-align: center;
-  position: relative
+  position: relative;
 }
 
 .signup-form-switcher ul li a::after, .signin-form-switcher ul li a::after  {
@@ -65,26 +90,33 @@ export default {
   top: 30px;
 }
 
-.signup-form-switcher .anchor-first-toggle::after,
-.signin-form-switcher .anchor-first-toggle::after {
-  background-color: rgba(30, 139, 195, 0.9);
+.anchor-first-toggle, .anchor-second-toggle {
+  padding: 20px;
+  width: 100%
 }
 
-.signup-form-switcher .anchor-second-toggle::after,
-.signin-form-switcher .anchor-second-toggle::after {
+.signup-form-switcher ul li a::after,
+.signin-form-switcher ul li a::after {
+  background-color: rgba(30, 139, 195, 1);
+}
+
+.signup-form-switcher ul li a::after,
+.signin-form-switcher ul li a::after {
   background-color: #d2d8d8;
 }
 
-
-.signup-form-switcher {
-  color: black;
-}
-
 .signup-form-switcher ul li a.selected::after {
-  background-color: black;
+  background-color: rgba(30, 139, 195, 1);
 }
 
 .signup-form-switcher ul li a.un-selected::after {
+  background-color: #d2d8d8;
+}
+.signin-form-switcher ul li a.selected::after {
+  background-color: rgba(30, 139, 195, 1);
+}
+
+.signin-form-switcher ul li a.un-selected::after {
   background-color: #d2d8d8;
 }
 
