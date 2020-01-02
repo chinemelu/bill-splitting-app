@@ -8,6 +8,14 @@ class AxiosCalls {
       throw error.response.data;
     }
   }
+
+  static async get(url) {
+    try {
+      return await axios.get(url);
+    } catch (error) {
+      throw error.response.data;
+    }
+  }
 }
 
 export default AxiosCalls;

@@ -8,27 +8,60 @@
         <th>No of Recipients</th>
         <th>Action</th>
       </tr>
-      <tr>
-        <td>26th Jan, 2020</td>
-        <td>Hangout at Vesicash</td>
-        <td>Too long to be bothered</td>
-        <td>3</td>
+      <tr v-for="(bill, index) in fetchedBills" :key="index">
+        <td>{{new Date(bill.created_at).toLocaleDateString('en-GB', options)}}</td>
+        <td>{{bill.title}}</td>
+        <td>{{bill.description}}</td>
+        <td>{{bill.bill_recipients.length}}</td>
         <td><button class="list-bills-btn">View details</button></td>
       </tr>
     </table>
+    <spinner
+    v-if="isListBillsPageLoading"
+    >
+
+    </spinner>
   </default-layout>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import defaultLayout from '@/components/layout/defaultLayout.vue';
+import Spinner from '@/components/ui/Spinner.vue';
 
 export default {
   components: {
     'default-layout': defaultLayout,
+    Spinner,
+  },
+  mounted() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userAccountID = user.user_account_id;
+    this.fetchBills(userAccountID);
+  },
+  data() {
+    return {
+      options: { day: 'numeric', month: 'long', year: 'numeric' },
+    };
+  },
+  computed: {
+    ...mapState({
+      isListBillsPageLoading: state => state.bills.isListBillsPageLoading,
+      fetchedBills: state => state.bills.listedBills,
+    }),
+  },
+  watch: {
+    bills() {
+      console.log('section changed');
+    },
+  },
+  methods: {
+    ...mapActions({
+      fetchBills: 'handleBillListing',
+    }),
   },
 };
 </script>
-
 
 <style scoped>
 .list-bills-table {
